@@ -37,6 +37,9 @@
   "directories": {
     "test": "tests"
   },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  },
   "dependencies": {
     "abbrev": "^1.1.1",
     "acorn": "^8.10.0",
@@ -108,7 +111,6 @@
     "flatted": "^3.2.9",
     "fs-minipass": "^2.1.0",
     "fs.realpath": "^1.0.0",
-    "fsevents": "^2.3.2",
     "gauge": "^3.0.2",
     "get-func-name": "^2.0.2",
     "glob": "^7.2.3",
