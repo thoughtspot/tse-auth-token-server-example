@@ -215,9 +215,6 @@ dependencies:
   fs.realpath:
     specifier: ^1.0.0
     version: 1.0.0
-  fsevents:
-    specifier: ^2.3.2
-    version: 2.3.2
   gauge:
     specifier: ^3.0.2
     version: 3.0.2
@@ -626,6 +623,11 @@ dependencies:
   yocto-queue:
     specifier: ^0.1.0
     version: 0.1.0
+
+optionalDependencies:
+  fsevents:
+    specifier: ^2.3.2
+    version: 2.3.2
 
 devDependencies:
   '@fontsource/fira-mono':
@@ -1803,6 +1805,7 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
+    optional: true
 
   /gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
