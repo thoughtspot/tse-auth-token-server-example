@@ -9,6 +9,11 @@ export async function GET({url}) {
     throw error(400, 'username parameter is required, e.g. /token/?username=foo');
   }
 
+  const userregx = /user[0-9][0-9][0-9]/;
+  if (!username.match(userregx)) {
+    throw error(403, 'only users in for the form of userNNN are allowed');
+  }
+
   const data = {
     "username": username,
     "validity_time_in_sec": 300,
