@@ -60,7 +60,7 @@
         .catch(error => {
             msgDiv.innerHTML = "<p>" + "Unable to get the " + apiFullEndpoint + "response: " + error;
             console.error("Unable to get the" + endpoint + "response: " + error);
-            return error;
+            return false;
         });
 
       return resp;
