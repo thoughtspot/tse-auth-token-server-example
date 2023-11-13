@@ -19,7 +19,7 @@
         //alert("I been hit!");
     }
 
-    function trustedAuthDirectLogin(jsonData){
+    async function trustedAuthDirectLogin(jsonData){
         // jsonData needs to have the tsHost and the Bearer Token
         console.log('jsonData =' , jsonData);
         var passedValues = JSON.parse(jsonData);
@@ -48,7 +48,7 @@
         let msgDiv = document.getElementById('message');
         msgDiv.innerHTML = "<p>script has been triggered";
         
-        fetch(apiFullEndpoint, fetchArguments)
+        await fetch(apiFullEndpoint, fetchArguments)
         // is there always response JSON?
         .then(response =>  {
             // response.json();
