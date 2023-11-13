@@ -48,7 +48,7 @@
         let msgDiv = document.getElementById('message');
         msgDiv.innerHTML = "<p>script has been triggered";
         
-        return fetch(apiFullEndpoint, fetchArguments)
+        let resp = fetch(apiFullEndpoint, fetchArguments)
         // is there always response JSON?
         .then(response =>  {
             // response.json();
@@ -62,6 +62,8 @@
             console.error("Unable to get the" + endpoint + "response: " + error);
             return error;
         });
+
+      return resp;
 
     }
 
