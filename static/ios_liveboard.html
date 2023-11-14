@@ -81,7 +81,8 @@ import {
 */
 function tokenCallbackFunc(){
     console.log('tokenCallback fires');
-    document.getElementById('topMenu').innerHTML = 'Token callback with " + tsToken;
+  
+    document.getElementById('topMenu').innerHTML = "<p>Token callback with " + tsToken;
     return tsToken;
 }
 
