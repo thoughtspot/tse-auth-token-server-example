@@ -43,32 +43,25 @@
 
 <!-- Custom Top Menu -->    
 <div id='topMenu'>
-    <h2>Custom Top Menu --> <a href='#'>Home</a> | <a href='#'>Reports</a> | &nbsp; <button id='topMenuButton'>Action Button</button></h2>
 </div>
-    
-      <!-- Floating button -->
-     <!-- <div id='floatingButton' >
-    <button class='buttonAbove'>Button From Wrapper</button>
-</div>-->
+  
 
-    <!--<div id='header'><h1>Test of ThoughtSpot Embed</h1></div>-->
-    <div id='page-content-div' style='display: flex;'>
-        <div id='main-content-div' style='flex: 3 3 0;'>
-            <!-- This div will show before the ThoughtSpot content has loaded -->
-            <div id="loader"><h1 id='loaderMsg'>Custom Loading screen in this div</h1></div>
-            <!-- This div will show if no data comes though / error in loading -->
-            <div id="no-data">No data came through!</div>
-            <!-- DIV that contains the actual embeded ThoughtSpot content -->
-            <div id='embed' style='opacity: 0;'></div>
-        </div>
+<div id='main-content-div'>
+    <!-- This div will show before the ThoughtSpot content has loaded -->
+    <div id="loader"><h1 id='loaderMsg'>Custom Loading screen in this div</h1></div>
+    <!-- This div will show if no data comes though / error in loading -->
+    <div id="no-data">No data came through!</div>
+    <!-- DIV that contains the actual embeded ThoughtSpot content -->
+    <div id='embed' style='opacity: 0;'></div>
 </div>
+
 
 
 <!-- Put the ThoughtSpot EmbedSDK script down here so it runs after the page loads fully -->
 <script type='module'>
-    let tsHost = "https://se-thoughtspot-cloud.thoughtspot.cloud"; // No trailing slash
+    let tsHost = "https://embed-1-do-not-delete.thoughtspotstaging.cloud"; // No trailing slash
     let tsToken = "";
-    let liveboardId = "";
+    let liveboardId = "5841a546-cb11-4503-b34d-4c7bd26fc760";
 // Import ThoughtSpot SDK
 import {
   init,
@@ -352,6 +345,7 @@ embed
     function prepareLiveboardFromApp(jsonData){
         // jsonData needs to have the tsHost and the Bearer Token
         console.log('jsonData =' , jsonData);
+        document.getElementById('topMenu').innerHtml = '<p>' + jsonData;
         var passedValues = JSON.parse(jsonData);    
         tsHost = passedValues['TSHost'];
         tsToken = pasedValues['TSToken'];
