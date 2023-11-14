@@ -62,6 +62,7 @@
     let tsHost = "https://embed-1-do-not-delete.thoughtspotstaging.cloud"; // No trailing slash
     let tsToken = "";
     let liveboardId = "5841a546-cb11-4503-b34d-4c7bd26fc760";
+  
 // Import ThoughtSpot SDK
 import {
   init,
@@ -83,13 +84,14 @@ function tokenCallbackFunc(){
     return tsToken;
 }
 
-console.log('About to init the embed');
+// console.log('About to init the embed');
 
 /* 
 * Initialize embed configuration
 * If doing a 'full page' FullApp embed, you can leave AuthType.None and just have people use ThoughtSpot direct sign-in
 * But if they are using SAML or OIDC, you'll want to use either AuthType.SAMLRedirect or AuthType.OIDCRedirect (per https://developers.thoughtspot.com/docs/?pageid=embed-auth)
 */
+  function doInit(){
     init({
       thoughtSpotHost: tsHost,
        authType: AuthType.TrustedAuthTokenCookieless,
@@ -97,62 +99,13 @@ console.log('About to init the embed');
       //username: tsUsername, // Username as a string, required for Trusted Auth to work
       getAuthToken: tokenCallbackFunc  // Callback function returning the token as a string
     });
+  }
 /*
-* Create the actual LiveboardEmbed component. 
-* This does not render anything (must call the .render() method later, after event listeners are defined)
-*/
-console.log(liveboardId);
-let embed = new LiveboardEmbed("#embed", {
-            frameParams: {
-            },
-            liveboardId: liveboardId,
-        });
-
-/*
-* Generic function to make a call to the V2.0 REST API 
-* 
-*/
-async function restApiCallV2(endpoint, httpVerb, apiRequestObject){
-    const publicApiUrl = 'api/rest/2.0/';
-    console.log("hitting endpoint " + endpoint + " with verb " + httpVerb + " and request:");
-    console.log(apiRequestObject);
-    const apiFullEndpoint = tsHost + "/" + publicApiUrl + endpoint;
-    // Check for APIs with batching
-    if ('record_offset' in apiRequestObject){
-        console.log("This API request has record_offset property")
-    }
-
-    return await fetch(
-        apiFullEndpoint, 
-        {
-            method: httpVerb.toUpperCase(),
-            headers: {
-                "Accept": "application/json",
-                "X-Requested-By": "ThoughtSpot",
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify(apiRequestObject)
-        })
-    // is there always response JSON?
-    .then(response =>  response.json())
-    .catch(error => {
-        console.error("Unable to get the" + endpoint + "response: " + error);
-    });
-}
-
-// Easy type names match ThoughtSpot UI names for objects
-const typesToApiTypeV2 = {
-    'liveboard': 'LIVEBOARD',
-    'answer': 'ANSWER',
-    'datasource' : 'LOGICAL_TABLE', // datasource doesn't distinguish sub-types
-}
 
 
 /*
 * A bunch of example UI tie-ins for the various events in the loading process (pre-load, errors, cookie settings, etc)
 */
-hideNoDataImage();
 
 function showSSOFailedMsg(){
     let loadMsgElement = document.getElementById('loaderMsg');
@@ -215,6 +168,16 @@ let tsLoggedIn = false;
 let userGUID = '';
 let dsGUIDs = [];
 
+function loadLiveboard(){
+* Create the actual LiveboardEmbed component. 
+* This does not render anything (must call the .render() method later, after event listeners are defined)
+*/
+console.log(liveboardId);
+let embed = new LiveboardEmbed("#embed", {
+            frameParams: {
+            },
+            liveboardId: liveboardId,
+        });
 /*
 * Event listeners are attached to the Embed component to tie together ThoughtSpot component actions with outer embedding app
 * The following attaches various EmbedEvent listeners
@@ -323,7 +286,9 @@ embed
     // on a Liveboard, you may want to consider if Drilldown has fire to know what to respond with
     .on(EmbedEvent.Drilldown, (response) => {
         console.log('Drilldown event fires');
-    });
+    })
+  .render();
+}
     // Renders the FullApp embed after all event listeners are attached
    // .render()
 
@@ -336,8 +301,9 @@ embed
         tsToken = pasedValues['TSToken'];
         liveboardId = passedValues['liveboardId'];
         doInit();
+        loadLiveboard();
         // Make it actually load
-        embed.render();
+        //embed.render();
         return "embed.render() has been called";
 
     }
