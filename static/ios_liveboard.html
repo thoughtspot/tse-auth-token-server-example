@@ -90,14 +90,15 @@ console.log('About to init the embed');
 * If doing a 'full page' FullApp embed, you can leave AuthType.None and just have people use ThoughtSpot direct sign-in
 * But if they are using SAML or OIDC, you'll want to use either AuthType.SAMLRedirect or AuthType.OIDCRedirect (per https://developers.thoughtspot.com/docs/?pageid=embed-auth)
 */
-init({
-  thoughtSpotHost: tsHost,
-   authType: AuthType.TrustedAuthTokenCookieless,
-  //authType: AuthType.AuthServer,
-  //username: tsUsername, // Username as a string, required for Trusted Auth to work
-  getAuthToken: tokenCallbackFunc  // Callback function returning the token as a string
-});
-
+  function doInit() {
+    init({
+      thoughtSpotHost: tsHost,
+       authType: AuthType.TrustedAuthTokenCookieless,
+      //authType: AuthType.AuthServer,
+      //username: tsUsername, // Username as a string, required for Trusted Auth to work
+      getAuthToken: tokenCallbackFunc  // Callback function returning the token as a string
+    });
+  }
 /*
 * Create the actual LiveboardEmbed component. 
 * This does not render anything (must call the .render() method later, after event listeners are defined)
@@ -350,7 +351,7 @@ embed
         tsHost = passedValues['TSHost'];
         tsToken = pasedValues['TSToken'];
         liveboardId = passedValues['liveboardId'];
-
+        doInit();
         // Make it actually load
         embed.render();
         return "embed.render() has been called";
