@@ -81,6 +81,7 @@ import {
 */
 function tokenCallbackFunc(){
     console.log('tokenCallback fires');
+    document.getElementById('topMenu').innerHTML = 'Token callback with " + tsToken;
     return tsToken;
 }
 
@@ -302,11 +303,11 @@ embed
         tsHost = passedValues['TSHost'];
         tsToken = passedValues['TSToken'];
         liveboardId = passedValues['liveboardId'];
-      /*
+      
         doInit();
         loadLiveboard();
         // Make it actually load
-        //embed.render();*/
+        //embed.render();
         return "embed.render() has been called with " + jsonData;
 
     }
