@@ -96,7 +96,8 @@ function tokenCallbackFunc(){
   function doInit(){
     init({
       thoughtSpotHost: tsHost,
-       authType: AuthType.TrustedAuthTokenCookieless,
+       //authType: AuthType.TrustedAuthTokenCookieless,
+      authType: AuthType.None,
       //authType: AuthType.AuthServer,
       //username: tsUsername, // Username as a string, required for Trusted Auth to work
       getAuthToken: tokenCallbackFunc  // Callback function returning the token as a string
