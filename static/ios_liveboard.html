@@ -241,7 +241,7 @@ embed
             //console.log('ALL event fires');
             //console.log(response);
     })
-    .on(EmbedEvent.Init, showLoader)
+    //.on(EmbedEvent.Init, showLoader)
     .on(EmbedEvent.NoCookieAccess, showCookieSettingsMsg)
     .on(EmbedEvent.AuthInit, (response) => {
         console.log('AuthInit event fires');
@@ -250,7 +250,7 @@ embed
         tsLoggedIn = true;
         // authInit returns object -> {type: 'authInit', data: {userGuid: <guid>} } }
         userGUID = response.data.userGUID;
-        hideLoader();
+        //hideLoader();
     } )
     .on(EmbedEvent.AuthExpire, (response) => {
         console.log('AuthExpire event fires');
