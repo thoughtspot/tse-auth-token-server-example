@@ -104,24 +104,10 @@ console.log('About to init the embed');
 * This does not render anything (must call the .render() method later, after event listeners are defined)
 */
 console.log(liveboardId);
-let embed = new LiveboardEmbed("embed", {
+let embed = new LiveboardEmbed("#embed", {
             frameParams: {
-                height: '100%',
-                width: '100%'
             },
-            /*param-start-modifyActions*/
-            disabledActions: [],
-            disabledActionReason: "Reason for disabling",
-            hiddenActions: [],
-            /*param-end-modifyActions*/
             liveboardId: liveboardId,
-            /*runtimeFilters: [ {
-                columnName: 'Country', // eg: color
-                operator: RuntimeFilterOp.EQ,
-                values: ['Taiwan'] // eg: red
-                }
-            ]
-            /*param-start-runtimeFilters*//*param-end-runtimeFilters*/
         });
 
 /*
