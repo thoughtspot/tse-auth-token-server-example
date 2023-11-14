@@ -297,7 +297,7 @@ embed
     function prepareLiveboardFromApp(jsonData){
         // jsonData needs to have the tsHost and the Bearer Token
         console.log('jsonData =' , jsonData);
-        document.getElementById('topMenu').innerHtml = '<p>' + jsonData;
+        document.getElementById('topMenu').innerHTML = '<p>' + jsonData;
         var passedValues = JSON.parse(jsonData);    
         tsHost = passedValues['TSHost'];
         tsToken = passedValues['TSToken'];
