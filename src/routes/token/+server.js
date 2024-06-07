@@ -1,12 +1,22 @@
 import {error} from '@sveltejs/kit';
-import {TS_URL, ORG_ID, SECRET_KEY} from '$env/static/private';
+import {TS_URL, ORG_ID, SECRET_KEY, PASSCODE} from '$env/static/private';
 
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({url}) {
+  const urlFormat = "/token/?username={username}&passcode={passcode}";
+
   const username = url.searchParams.get('username');
   if (!username) {
-    throw error(400, 'username parameter is required, e.g. /token/?username=foo');
+    throw error(400, 'username parameter is required, e.g. ${urlFormat}');
+  }
+
+  const passcode = url.searchParams.get('passcode');
+  if (!passcode) {
+    throw error(400, 'a valid passcode is required, e.g. ${urlFormat}');
+  }
+  if (passcode !== PASSCODE) {
+    throw error(400, `passcode is incorrect, e.g. ${urlFormat}'`);
   }
 
   const userregx = /user[0-9][0-9][0-9]/;
@@ -33,7 +43,14 @@ export async function GET({url}) {
   );
 
   const tokenbody = await resp.json();
-  const token = tokenbody.token;
+  console.log(JSON.stringify(tokenbody));
+  let token;
+  if (tokenbody['error']) { // means there was an error
+    token = JSON.stringify(tokenbody);
+  }
+  else {
+    token = tokenbody.token;
+  }
 
   return new Response(`${JSON.stringify(token)}`);
 }

@@ -1,4 +1,4 @@
-import {TS_URL, ORG_ID, SECRET_KEY} from '$env/static/private';
+import {TS_URL, ORG_ID, SECRET_KEY, PASSCODE} from '$env/static/private';
 
 
 /** @type {import('./$types').RequestHandler} */
