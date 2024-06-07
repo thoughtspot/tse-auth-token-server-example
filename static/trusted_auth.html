@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--
+  Extremely simple ThoughtSpot Embed framework, meant to take the code from the playground
+-->
+<html lang='en'>
+<head>
+
+
+</head>
+<body>
+    <p>We are trying to login here
+    <p> Something else here
+    <div id='message'></div>
+    <script>
+
+    // Function for trggering from iOS app
+
+    function testFunction(){
+        //alert("I been hit!");
+    }
+
+    async function trustedAuthDirectLogin(jsonData){
+        // jsonData needs to have the tsHost and the Bearer Token
+        console.log('jsonData =' , jsonData);
+        var passedValues = JSON.parse(jsonData);
+        console.log(passedValues);
+        let tsHost = passedValues['TSHost'];
+        let token = passedValues['TSToken'];
+
+        let endpoint = "auth/session/login";
+        
+        let bearerHeader = "Bearer " + token;
+        
+        let apiFullEndpoint = tsHost + "/api/rest/2.0/" + endpoint;
+
+        let fetchArguments = {
+                method: "POST",
+                headers: {
+                    //"Accept": "application/json",
+                   // "X-Requested-By": "ThoughtSpot",
+                    "Content-Type": "application/json",
+                    "Authorization": bearerHeader
+                },
+                credentials: "include"
+                //,body: JSON.stringify(apiRequestObject)
+            }
+        
+        let msgDiv = document.getElementById('message');
+        msgDiv.innerHTML = "<p>script has been triggered";
+        
+        let resp = await fetch(apiFullEndpoint, fetchArguments)
+        // is there always response JSON?
+        .then(response =>  {
+            // response.json();
+            alert("We done did it!");
+            msgDiv.innerHTML = "<p>Fetch has completed succesfully";
+            return "everything is great";
+        }
+        )
+        .catch(error => {
+            msgDiv.innerHTML = "<p>" + "Unable to get the " + apiFullEndpoint + "response: " + error;
+            console.error("Unable to get the" + endpoint + "response: " + error);
+            return false;
+        });
+      msgDiv.innerHTML = "<p>Resp is: " + resp;
+      return resp;
+
+    }
+
+      </script>
+  
+</body>
+</html>
