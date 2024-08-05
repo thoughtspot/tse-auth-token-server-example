@@ -60,6 +60,7 @@
 <!-- Put the ThoughtSpot EmbedSDK script down here so it runs after the page loads fully -->
 <script type='module'>
     let tsHost = "https://embed-1-do-not-delete.thoughtspotstaging.cloud"; // No trailing slash
+    // both tsToken and liveboardId are set via the WebView component of the iOS app, which makes this page dynamic
     let tsToken = "";
     let liveboardId = "5841a546-cb11-4503-b34d-4c7bd26fc760";
   
