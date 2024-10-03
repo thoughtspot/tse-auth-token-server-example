@@ -60,20 +60,12 @@
 <!-- Put the ThoughtSpot EmbedSDK script down here so it runs after the page loads fully -->
 <script type='module'>
     let tsHost = "https://embed-1-do-not-delete.thoughtspotstaging.cloud"; // No trailing slash
-    // both tsToken and liveboardId are set via the WebView component of the iOS app, which makes this page dynamic
-    let tsToken = "";
-    let liveboardId = "5841a546-cb11-4503-b34d-4c7bd26fc760";
   
 // Import ThoughtSpot SDK
 import {
   init,
-  LiveboardEmbed,
-  Action,
-  RuntimeFilterOp,
-  EmbedEvent,
-  HostEvent,
-  AuthType,
-  Page
+  prefetch,
+  PrefetchFeatures
 } from 'https://cdn.jsdelivr.net/npm/@thoughtspot/visual-embed-sdk/dist/tsembed.es.js';
 // import "./styles.css";
 
@@ -102,6 +94,14 @@ function tokenCallbackFunc(){
       //authType: AuthType.AuthServer,
       //username: tsUsername, // Username as a string, required for Trusted Auth to work
       getAuthToken: tokenCallbackFunc  // Callback function returning the token as a string
+    });
+  }
+
+  function doPrefetch(){
+    prefetch({
+      url: tsHost,
+      // Add other features as needed (minimize memory by not prefetching more than needed)
+      prefetchFeatures: [PrefetchFeatures.LiveboardEmbed]
     });
   }
 /*
@@ -298,20 +298,18 @@ embed
     // Renders the FullApp embed after all event listeners are attached
    // .render()
 
-    function prepareLiveboardFromApp(jsonData){
+    function preparePrefectchFromApp(jsonData){
         // jsonData needs to have the tsHost and the Bearer Token
         console.log('jsonData =' , jsonData);
         // document.getElementById('topMenu').innerHTML = '<p>' + jsonData;
         var passedValues = JSON.parse(jsonData);    
         tsHost = passedValues['TSHost'];
-        tsToken = passedValues['TSToken'];
-        liveboardId = passedValues['liveboardId'];
       
         doInit();
-        loadLiveboard();
+        // loadLiveboard();
         // Make it actually load
         //embed.render();
-        return "embed.render() has been called with " + jsonData;
+        return "prefetch() has been called with " + jsonData;
 
     }
 window.prepareLiveboardFromApp = prepareLiveboardFromApp;
