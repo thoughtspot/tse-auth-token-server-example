@@ -46,7 +46,6 @@ export async function GET({url}) {
       operator: filter.operator,
       values: filter.value.split(',').map(v => v.trim())
     }))
-    console.log(data['filter_rules']);
   }
 
   // Check for and add parameters.
@@ -55,10 +54,9 @@ export async function GET({url}) {
       name: parameter.name,
       values: parameter.value.split(',').map(v => v.trim())
     }))
-    console.log(data['parameter_values']);
   }
 
-  console.log(data);
+  console.log(JSON.stringify(data));
   const resp = await fetch(`${TS_URL}/api/rest/2.0/auth/token/custom`, {
       method: 'POST',
       headers: {
