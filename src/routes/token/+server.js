@@ -82,9 +82,10 @@ export async function GET({url}) {
 const is_valid_user = (username) => {
   // Returns true if this is a valid username.
 
-  // userNNN is for the advanced training.  tspractice1,2,3 etc. are for TSU.
   const userregx = /user[0-9][0-9][0-9]/;
-  return username.match(userregx) || username.startsWith('tspractice');
+  return username.match(userregx)  // Users for TSE training
+    || username.startsWith('tspractice') // Users for TSU
+    || username === 'tsedev';  // Shared user for TSE training
 }
 
 const get_org_id = (username) => {
