@@ -84,7 +84,7 @@ const is_valid_user = (username) => {
 
   const userregx = /user[0-9][0-9][0-9]/;
   return username.match(userregx)  // Users for TSE training
-    || username === 'training1test' // Users for TSU
+    || username.startsWith('training') // Users for TSU
     || username === 'tsedev';  // Shared user for TSE training
 }
 
@@ -93,7 +93,7 @@ const get_org_id = (username) => {
 
   if (username.startsWith('user')) {
     return TSE_ORG_ID;
-  } else if (username === 'training1test') {
+  } else if (username.startWith('training') {
     return E_LEARNING_ORG_ID;
   }
   return -1  // will cause an error.
