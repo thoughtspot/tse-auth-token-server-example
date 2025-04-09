@@ -93,7 +93,7 @@ const get_org_id = (username) => {
 
   if (username.startsWith('user')) {
     return TSE_ORG_ID;
-  } else if (username.startWith('training') {
+  } else if (username.startWith('training')) {
     return E_LEARNING_ORG_ID;
   }
   return -1  // will cause an error.
