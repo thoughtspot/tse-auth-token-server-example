@@ -1,0 +1,12 @@
+body {
+  font-size: 24px;
+  font-family: "Verdana"
+}
+
+h1 {
+  color: orangered;
+}
+
+.mono {
+  font-family: monospace;
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<!--
+  Full screen wrapper to load LiveboardEmbed within a WebView from iOS
+-->
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'/>
+    <title>ThoughtSpot Embed Test</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+        div {
+            /*border: 1px dashed black;
+            /*margin: 4px;
+            padding: 10px;*/
+        }
+
+        #embed {
+            /*height: 800px;
+            min-width: 600px;*/
+            height: 1600px;
+            width: 1000px;
+            min-height: 800px;
+        }
+
+        body {
+            background-color: rgb(250, 250, 250);
+            font-family: sans-serif;
+        }
+
+
+        #no-data {
+            display: none;
+        }
+
+    </style>
+    
+</head>
+
+<body>
+
+<!-- Custom Top Menu -->    
+<div id='topMenu'>
+</div>
+  
+
+<div id='main-content-div'>
+    <!-- This div will show before the ThoughtSpot content has loaded -->
+    <!--<div id="loader"><h1 id='loaderMsg'>Custom Loading screen in this div</h1></div>-->
+    <!-- This div will show if no data comes though / error in loading -->
+    <div id="no-data">No data came through!</div>
+    <!-- DIV that contains the actual embeded ThoughtSpot content -->
+    <div id='embed'></div>
+</div>
+
+
+
+<!-- Put the ThoughtSpot EmbedSDK script down here so it runs after the page loads fully -->
+<script type='module'>
+    let tsHost = "https://embed-1-do-not-delete.thoughtspotstaging.cloud"; // No trailing slash
+  
+// Import ThoughtSpot SDK
+import {
+  init,
+  prefetch,
+  PrefetchFeatures
+} from 'https://cdn.jsdelivr.net/npm/@thoughtspot/visual-embed-sdk/dist/tsembed.es.js';
+// import "./styles.css";
+
+/*
+* Would be built out if using Trusted Authentication for single sign-on
+*/
+function tokenCallbackFunc(){
+    console.log('tokenCallback fires');
+  
+    // document.getElementById('topMenu').innerHTML = "<p>Token callback with " + tsToken;
+    return tsToken;
+}
+
+// console.log('About to init the embed');
+
+/* 
+* Initialize embed configuration
+* If doing a 'full page' FullApp embed, you can leave AuthType.None and just have people use ThoughtSpot direct sign-in
+* But if they are using SAML or OIDC, you'll want to use either AuthType.SAMLRedirect or AuthType.OIDCRedirect (per https://developers.thoughtspot.com/docs/?pageid=embed-auth)
+*/
+  function doInit(){
+    init({
+      thoughtSpotHost: tsHost,
+      authType: AuthType.TrustedAuthTokenCookieless,
+      // authType: AuthType.None,
+      //authType: AuthType.AuthServer,
+      //username: tsUsername, // Username as a string, required for Trusted Auth to work
+      getAuthToken: tokenCallbackFunc  // Callback function returning the token as a string
+    });
+  }
+
+  function doPrefetch(){
+    prefetch({
+      url: tsHost,
+      // Add other features as needed (minimize memory by not prefetching more than needed)
+      prefetchFeatures: [PrefetchFeatures.LiveboardEmbed]
+    });
+  }
+/*
+
+
+/*
+* A bunch of example UI tie-ins for the various events in the loading process (pre-load, errors, cookie settings, etc)
+*/
+
+function showSSOFailedMsg(){
+    let loadMsgElement = document.getElementById('loaderMsg');
+    loadMsgElement.innerText = 'Sign-in failed, nothing for you!';
+}
+
+function tsSessionTimeoutCleanup(){
+    let tsEmbedDiv = document.getElementById('embed');
+    tsEmbedDiv.style.display = 'none';
+}
+
+function showCookieSettingsMsg(){
+
+}
+
+function showGenericErrorMsg(response){
+    console.log('Error event fires');
+    console.log(response);
+}
+
+// Functions to show and hide a loader while iframe loads
+function showLoader(response) {
+  document.getElementById("loader").style.display = "block";
+  console.log("Init event fires");
+  console.log("Loader is being shown");
+  console.log(response);
+}
+
+function hideLoader(response) {
+  document.getElementById("loader").style.display = "none";
+  console.log("Load event fires");
+  console.log('Loader is being hidden');
+  //console.log(response);
+  let embedDiv = document.getElementById('embed');
+  embedDiv.style.opacity = '100%';
+  // Added button
+  //document.getElementById("floatingButton").style.display = 'block';
+  //embedDiv.style.width = '800px';
+  // exampleRestApiCall();
+}
+
+// Functions to show or hide No data images
+
+function showNoDataImage() {
+  document.getElementById("no-data").style.display = "block";
+}
+function hideNoDataImage() {
+  document.getElementById("no-data").style.display = "none";
+}
+
+/*
+* End UI tie-in fuctions
+*/
+
+let tsLoggedIn = false;
+
+
+
+// userGUID comes through from the EmbedEvent.AuthInit and will be set then, but then should be global
+let userGUID = '';
+let dsGUIDs = [];
+
+function loadLiveboard(){
+/* Create the actual LiveboardEmbed component. 
+* This does not render anything (must call the .render() method later, after event listeners are defined)
+*/
+console.log(liveboardId);
+let embed = new LiveboardEmbed("#embed", {
+            frameParams: {
+                height: '100%',
+                width: '100%'
+            },
+            liveboardId: liveboardId,
+        });
+/*
+* Event listeners are attached to the Embed component to tie together ThoughtSpot component actions with outer embedding app
+* The following attaches various EmbedEvent listeners
+* Overview article: https://developers.thoughtspot.com/docs/?pageid=events-app-integration
+* Full reference for all events: https://developers.thoughtspot.com/docs/?pageid=events 
+*/
+embed
+    .on(EmbedEvent.ALL, (response) => {
+            //console.log('ALL event fires');
+            //console.log(response);
+    })
+    //.on(EmbedEvent.Init, showLoader)
+    .on(EmbedEvent.NoCookieAccess, showCookieSettingsMsg)
+    .on(EmbedEvent.AuthInit, (response) => {
+        console.log('AuthInit event fires');
+        console.log(response);
+        // Set that AuthInit has fired
+        tsLoggedIn = true;
+        // authInit returns object -> {type: 'authInit', data: {userGuid: <guid>} } }
+        userGUID = response.data.userGUID;
+        //hideLoader();
+    } )
+    .on(EmbedEvent.AuthExpire, (response) => {
+        console.log('AuthExpire event fires');
+        console.log(response);
+        // Handle if session dies while content shows
+        if (tsLoggedIn == true){
+            tsSessionTimeoutCleanup();
+        }
+        else {
+            // Display custom message if SSO issues
+            showSSOFailedMsg();
+        }
+    } )
+    .on(EmbedEvent.Error, showGenericErrorMsg)
+    /*param-start-customActionHandle*//*param-end-customActionHandle*/
+    .on(EmbedEvent.Alert, (response) => {
+        console.log("Alert event fires");
+        console.log(response);
+    })
+    // Fires when there is a change within FullApp, can be used to update a variable in the URL, for bookmarking
+    .on(EmbedEvent.RouteChange, (response) => {
+        // console.log("RouteChange fires");
+        // console.log(response);
+        // Updated tsAppState object currentPath property
+        // Other calls call to tsAppState for detecting the page, object type, GUIDs etc.
+        tsAppState.currentPath = response.data.currentPath;
+        tsAppState.currentDatasources = []; // Reset until you find out 
+        console.log("TS App page is now: ", tsAppState.currentPath);
+        if (tsAppState.objectId != null) {
+            console.log("Showing a " + tsAppState.pageType + " with Id", tsAppState.objectId)
+        }
+        else {
+            console.log("Showing page " + tsAppState.pageType);
+        }
+
+    })
+    // Fires on Search or Answer when the data source selector UI is activated by an end user
+    .on(EmbedEvent.DataSourceSelected, (response) => {
+        console.log('DataSourceSelected event fires');
+        console.log(response);
+        let dataSources = response.data;
+        
+        if (dataSources.length === 0){
+            console.log("No data sources have been selected");
+        }
+        else{
+            console.log("Selected Data Sources: ");
+            console.log(dataSources);
+            tsAppState.currentDatasources = dataSources;
+        }
+    } )
+    // Can be used to detect when visual is ready to display, not that important in a Full App embed
+    .on(EmbedEvent.Data, (response) => {
+        console.log('Data event fires');
+        console.log(response);
+    } )
+    // Fires only on Search/Answer view
+    .on(EmbedEvent.QueryChanged, (response) => {
+        console.log('QueryChanged event fires');
+        console.log(response);
+        // You could trigger the HostEvent.GetTML here
+        // to get the current TML Search String of a SearchEmbed component
+        // This event does not fire off in a Liveboard currently
+    } )
+    // Listener for various Custom Actions triggered from within ThoughtSpot from menus by user
+    .on(EmbedEvent.CustomAction, (response) => {
+        console.log('CustomAction event fires');
+        console.log(response);
+        const customActionData = response.data;
+    } )
+    // Listener for VizPointClick event (equivalent of Context Menu Custom Action without menu selection)
+    .on(EmbedEvent.VizPointClick, (response) => {
+        console.log('VizPointClick event fires');
+        console.log(response);
+        // Split actions depending on type of object that is triggering the Custom Action
+        if(tsAppState.pageType == 'answer' || tsAppState.pageType == 'Search'){
+            vizTmlSearchString = getCurrentTmlSearchString();
+            // Possibly add in filters created from selection
+        }
+        else if (tsAppState.pageType == 'liveboard'){
+            const customActionData = response.data; // Named the same as code above, since relatively is same as ContextMenu Custom Action response
+        }
+    })
+    // Drilldown event may change the state of a given viz. In SearchEmbed, GetTML will be updated
+    // on a Liveboard, you may want to consider if Drilldown has fire to know what to respond with
+    .on(EmbedEvent.Drilldown, (response) => {
+        console.log('Drilldown event fires');
+    })
+  .render();
+}
+    // Renders the FullApp embed after all event listeners are attached
+   // .render()
+
+    function preparePrefectchFromApp(jsonData){
+        // jsonData needs to have the tsHost and the Bearer Token
+        console.log('jsonData =' , jsonData);
+        // document.getElementById('topMenu').innerHTML = '<p>' + jsonData;
+        var passedValues = JSON.parse(jsonData);    
+        tsHost = passedValues['TSHost'];
+      
+        doInit();
+        // loadLiveboard();
+        // Make it actually load
+        //embed.render();
+        return "prefetch() has been called with " + jsonData;
+
+    }
+window.prepareLiveboardFromApp = prepareLiveboardFromApp;
+
+</script>
+    
+
+</body>
