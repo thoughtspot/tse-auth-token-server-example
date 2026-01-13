@@ -183,7 +183,7 @@
     "pathval": "^1.1.1",
     "picocolors": "^1.0.0",
     "picomatch": "^2.3.1",
-    "playwright": "^1.38.1",
+    "playwright": "^1.56.0",
     "playwright-core": "^1.38.1",
     "postcss": "^8.4.30",
     "postcss-load-config": "^3.1.4",
