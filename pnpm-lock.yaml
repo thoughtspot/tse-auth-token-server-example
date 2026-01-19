@@ -591,8 +591,8 @@ dependencies:
     specifier: ^0.20.2
     version: 0.20.2
   undici:
-    specifier: ^5.25.2
-    version: 5.25.2
+    specifier: ^6.23.0
+    version: 6.23.0
   uri-js:
     specifier: ^4.4.1
     version: 4.4.1
@@ -2669,11 +2669,9 @@ packages:
       busboy: 1.6.0
     dev: true
 
-  /undici@5.25.2:
-    resolution: {integrity: sha512-tch8RbCfn1UUH1PeVCXva4V8gDpGAud/w0WubD6sHC46vYQ3KDxL+xv1A2UxK0N6jrVedutuPHxe1XIoqerwMw==}
-    engines: {node: '>=14.0'}
-    dependencies:
-      busboy: 1.6.0
+  /undici@6.23.0:
+    resolution: {integrity: sha512-VfQPToRA5FZs/qJxLIinmU59u0r7LXqoJkCzinq3ckNJp3vKEh7jTWN589YQ5+aoAC/TGRLyJLCPKcLQbM8r9g==}
+    engines: {node: '>=18.17'}
     dev: false
 
   /uri-js@4.4.1:
